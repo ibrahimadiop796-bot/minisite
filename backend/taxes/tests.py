@@ -85,6 +85,26 @@ class ImpotAPITests(APITestCase):
         response = self.client.get("/api/impots/?statut=paye")
         self.assertEqual(response.data["count"], 1)
 
+    def test_creation_impot_par_contribuable(self):
+        response = self.client.post(
+            "/api/impots/",
+            {"categorie": self.categorie.id, "libelle": "TVA 2025", "montant": 75000},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["statut"], "impaye")
+        self.assertTrue(response.data["reference"].startswith("IMP-"))
+        impot = Impot.objects.get(id=response.data["id"])
+        self.assertEqual(impot.utilisateur, self.user)
+
+    def test_creation_impot_montant_invalide(self):
+        response = self.client.post(
+            "/api/impots/",
+            {"categorie": self.categorie.id, "libelle": "TVA", "montant": 0},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
 class NotificationAPITests(APITestCase):
     def setUp(self):

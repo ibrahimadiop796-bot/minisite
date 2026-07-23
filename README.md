@@ -72,6 +72,17 @@ L'interface est disponible sur `http://localhost:5173`.
 
 ---
 
+## Utilisation
+
+- **Payer un impôt** : menu **« Payer un impôt »** → choisir le type d'impôt
+  (le montant indicatif se pré-remplit), ajuster le montant, sélectionner
+  **Wave** ou **Orange Money**, saisir le numéro puis valider → reçu de paiement.
+- **Espace administrateur** : se connecter avec un compte `is_staff` →
+  le menu **« Administration »** apparaît (suivi des recouvrements et paiements).
+  La console Django complète reste disponible sur `/admin/`.
+
+---
+
 ## Comptes de démonstration
 
 Créés par la commande `python manage.py seed_demo` :
@@ -95,8 +106,9 @@ Créés par la commande `python manage.py seed_demo` :
 | POST | `/api/auth/inscription/` | Créer un compte |
 | POST | `/api/auth/connexion/` | Connexion (renvoie les tokens JWT) |
 | GET/PATCH | `/api/auth/profil/` | Profil de l'utilisateur connecté |
-| GET | `/api/impots/` | Liste des impôts (filtre `?statut=`) |
+| GET/POST | `/api/impots/` | Liste et déclaration d'un impôt (filtre `?statut=`) |
 | GET | `/api/impots/resume/` | Totaux dus / payés / en retard |
+| GET | `/api/categories/` | Catalogue des types d'impôts |
 | GET/POST | `/api/paiements/` | Historique et création d'un paiement |
 | GET | `/api/notifications/` | Notifications du contribuable |
 | — | `/admin/` | Console d'administration Django |

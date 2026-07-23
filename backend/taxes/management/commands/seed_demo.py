@@ -10,12 +10,19 @@ from taxes.models import CategorieImpot, Impot, Notification
 
 Utilisateur = get_user_model()
 
+# Catalogue des principaux impôts et taxes au Sénégal.
+# (nom, description, montant indicatif en FCFA)
 CATEGORIES = [
-    ("Impôt sur le revenu", "Impôt sur les revenus des personnes physiques."),
-    ("Impôt foncier", "Impôt sur les propriétés bâties et non bâties."),
-    ("Patente", "Contribution due par les commerçants et entreprises."),
-    ("TVA", "Taxe sur la valeur ajoutée."),
-    ("Taxe sur les véhicules", "Vignette automobile annuelle."),
+    ("Impôt sur le Revenu (IR)", "Impôt sur les revenus des personnes physiques.", 150000),
+    ("Impôt sur les Sociétés (IS)", "Impôt sur les bénéfices des sociétés.", 500000),
+    ("TVA", "Taxe sur la valeur ajoutée (18 %).", 100000),
+    ("Contribution Économique Locale (CEL)", "Ex-patente : contribution des entreprises et commerçants.", 120000),
+    ("Impôt foncier sur les propriétés bâties", "Taxe annuelle sur les immeubles bâtis.", 90000),
+    ("Impôt foncier sur les propriétés non bâties", "Taxe annuelle sur les terrains non bâtis.", 60000),
+    ("Taxe sur la plus-value immobilière", "Taxe sur la cession d'un bien immobilier.", 200000),
+    ("Droits d'enregistrement", "Droits sur les actes et mutations.", 50000),
+    ("Vignette (taxe sur les véhicules)", "Taxe annuelle sur les véhicules à moteur.", 45000),
+    ("Contribution Forfaitaire (CFCE)", "Contribution forfaitaire à la charge des employeurs.", 80000),
 ]
 
 CONTRIBUABLES = [
@@ -51,9 +58,10 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING("Données existantes supprimées."))
 
         categories = {}
-        for nom, desc in CATEGORIES:
+        for nom, desc, montant_indicatif in CATEGORIES:
             cat, _ = CategorieImpot.objects.get_or_create(
-                nom=nom, defaults={"description": desc}
+                nom=nom,
+                defaults={"description": desc, "montant_indicatif": montant_indicatif},
             )
             categories[nom] = cat
 
@@ -80,8 +88,8 @@ class Command(BaseCommand):
                 user.save()
 
             exemples = [
-                (categories["Impôt sur le revenu"], "IR " + str(annee), 250000, annee, 30, Impot.Statut.IMPAYE),
-                (categories["Impôt foncier"], "Taxe foncière " + str(annee), 120000, annee, -10, Impot.Statut.IMPAYE),
+                (categories["Impôt sur le Revenu (IR)"], "IR " + str(annee), 250000, annee, 30, Impot.Statut.IMPAYE),
+                (categories["Impôt foncier sur les propriétés bâties"], "Taxe foncière " + str(annee), 120000, annee, -10, Impot.Statut.IMPAYE),
                 (categories["TVA"], "TVA T4 " + str(annee - 1), 90000, annee - 1, -120, Impot.Statut.PAYE),
             ]
             for cat, libelle, montant, an, delta, statut in exemples:

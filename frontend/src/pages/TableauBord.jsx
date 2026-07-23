@@ -30,9 +30,14 @@ export default function TableauBord() {
           <h1>Bonjour, {utilisateur?.first_name} 👋</h1>
           <p className="sous-titre">Voici un aperçu de votre situation fiscale.</p>
         </div>
-        <Link to="/impots" className="btn btn-primaire">
-          Voir tous mes impôts
-        </Link>
+        <div className="hero-actions">
+          <Link to="/payer" className="btn btn-primaire">
+            Payer un impôt
+          </Link>
+          <Link to="/impots" className="btn btn-secondaire">
+            Voir tous mes impôts
+          </Link>
+        </div>
       </div>
 
       <div className="grille-cartes">

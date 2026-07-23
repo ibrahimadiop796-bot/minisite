@@ -29,6 +29,9 @@ export default function Impots() {
           <h1>Mes impôts</h1>
           <p className="sous-titre">Consultez le détail de vos impôts et réglez-les.</p>
         </div>
+        <Link to="/payer" className="btn btn-primaire">
+          Payer un impôt
+        </Link>
       </div>
 
       <div className="onglets">
@@ -46,7 +49,12 @@ export default function Impots() {
       {chargement ? (
         <p className="chargement">Chargement…</p>
       ) : impots.length === 0 ? (
-        <div className="vide">Aucun impôt à afficher.</div>
+        <div className="vide">
+          <p>Aucun impôt à afficher pour le moment.</p>
+          <Link to="/payer" className="btn btn-primaire" style={{ marginTop: "1rem" }}>
+            Payer un impôt
+          </Link>
+        </div>
       ) : (
         <div className="tableau-conteneur">
           <table className="tableau">

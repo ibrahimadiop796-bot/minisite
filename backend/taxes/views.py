@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import CategorieImpot, Impot, Notification
 from .serializers import (
     CategorieImpotSerializer,
+    CreationImpotSerializer,
     ImpotSerializer,
     NotificationSerializer,
 )
@@ -18,14 +19,28 @@ class CategorieImpotViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class ImpotViewSet(viewsets.ReadOnlyModelViewSet):
+class ImpotViewSet(
+    mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet
+):
     """
-    Consultation des impôts.
-    Un contribuable ne voit que ses propres impôts ; l'administrateur voit tout.
+    Consultation et déclaration des impôts.
+    Un contribuable ne voit et ne crée que ses propres impôts ;
+    l'administrateur voit tout.
     """
 
     serializer_class = ImpotSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return CreationImpotSerializer
+        return ImpotSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        impot = serializer.save()
+        return Response(ImpotSerializer(impot).data, status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         user = self.request.user

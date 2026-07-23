@@ -5,7 +5,7 @@ from .models import CategorieImpot, Impot, Notification
 
 @admin.register(CategorieImpot)
 class CategorieImpotAdmin(admin.ModelAdmin):
-    list_display = ["nom", "description"]
+    list_display = ["nom", "montant_indicatif", "description"]
     search_fields = ["nom"]
 
 

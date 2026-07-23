@@ -8,6 +8,11 @@ class CategorieImpot(models.Model):
 
     nom = models.CharField("nom", max_length=120, unique=True)
     description = models.TextField("description", blank=True)
+    montant_indicatif = models.DecimalField(
+        "montant indicatif (FCFA)", max_digits=12, decimal_places=0,
+        null=True, blank=True,
+        help_text="Montant proposé par défaut lors d'un nouveau paiement (facultatif).",
+    )
 
     class Meta:
         verbose_name = "catégorie d'impôt"
